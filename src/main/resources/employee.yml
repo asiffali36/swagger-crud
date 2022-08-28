@@ -1,0 +1,144 @@
+swagger: '2.0'
+info:
+  description: Sample Swagger Demo
+  version: 1.0.0
+  title: Swagger Employee Demo
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: localhost
+basePath: /v1
+tags:
+  - name: employee
+    description: Everything about your Employee
+schemes:
+  - http
+paths:
+  /employee-details:
+    get:
+      tags:
+        - get-employee
+      summary: employee detail
+      description: Returns a single Employee
+      operationId: getEmployeeRecord
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Employee'
+        '400':
+          description: Invalid Employee ID supplied
+        '404':
+          description: Employee not found
+
+
+  /update-employeedetails:
+    put:
+      tags:
+        - api-controller
+      summary: putRecord
+      operationId: updateEmployeeRecords
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: id
+          required: true
+          type: integer
+          format: int32
+        - in: body
+          name: modelClass
+          description: modelClass
+          required: true
+          schema:
+            $ref: '#/definitions/Employee'
+      responses:
+        '200':
+          description: Record updated
+          schema:
+            $ref: '#/definitions/Employee'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+    post:
+      tags:
+        - api-controller
+      summary: addEmployee
+      operationId: addEmployeeRecord
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: employee
+          description: employee
+          required: true
+          schema:
+            $ref: '#/definitions/Employee'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Employee'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+
+  /delete-employee:
+    delete:
+      tags:
+        - delete-employee
+      summary: deleteById
+      operationId: deleteEmployeeRecord
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: integer
+            format: int32
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      deprecated: false
+definitions:
+  Employee:
+    type: object
+    properties:
+      firstName:
+        type: string
+        description: Employee First Name
+      lastName:
+        type: string
+        description: Employee Last Name
