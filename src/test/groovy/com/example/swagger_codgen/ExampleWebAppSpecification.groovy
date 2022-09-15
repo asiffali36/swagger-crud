@@ -1,5 +1,6 @@
 package com.example.swagger_codgen
 
+import com.example.swagger_codgen.model.Employee
 import groovyx.net.http.RESTClient
 import groovyx.net.http.Status
 import spock.lang.Specification
@@ -8,10 +9,13 @@ import spock.lang.Specification
 
 class ExampleWebAppSpecification extends Specification {
     def primerEndpoint = new RESTClient('http://localhost:8080')
-    int userid;
+      Employee employee = new Employee()
+
+   public static int userid;
+
 
     def 'create Test'() {
-        when: 'try to save record with all required fields'
+        when:
         def response = primerEndpoint.post(
                 path: '/update-employeedetails',
                 body: [
@@ -22,20 +26,34 @@ class ExampleWebAppSpecification extends Specification {
                 requestContentType: 'application/json'
         )
 
+        def  CreatedUserid=  response.responseData.body
+        userid = (Integer) CreatedUserid;
+
         then: 'server returns 201 code (created)'
-
-        def  id=  response.responseData.body
-        int userid = (Integer) id;
-
         with(response) {
-
             Status.SUCCESS
         }
+    }
 
+        def "update-Employee"() {
+        setup:
+        employee.setFirstName("updated")
+        employee.setLastName("RE")
+        when:
+        def response = primerEndpoint.put(
+                path: '/update-employeedetails',
+                body: employee,
+                query : [ id : userid ],
+                requestContentType: 'application/json'
+        )
+        then:
+        with(response) {
+            Status.SUCCESS
+        }
     }
 
     def 'Read Test'() {
-        when: 'Checking credentials before getting data'
+        when:
         def resp = primerEndpoint.get(path: '/employee-details')
         then:
         with(resp) {
@@ -43,34 +61,18 @@ class ExampleWebAppSpecification extends Specification {
 
         }
     }
-    def 'Update Test'() {
 
-        when: 'try to save record with all required fields'
-        def response = primerEndpoint.put(
-                path: '/update-employeedetails',
-                body: [
-                        "firstName" : "updated",
-                        "lastName": "record"
 
-                ],
-                query : [ id : userid ],
-                requestContentType: 'application/json'
-        )
-
-        then: 'server returns 204 code (updated)'
-        with(response) {
-            Status.SUCCESS
-        }
-
-    }
     def 'Delete testing'() {
-        when: 'Checking credentials before getting data'
+        when:
         def resp = primerEndpoint.delete( path: '/delete-employee', query : [ id : userid ])
         then:
         with(resp) {
             Status.SUCCESS
         }
     }
+
+
 
 
 
