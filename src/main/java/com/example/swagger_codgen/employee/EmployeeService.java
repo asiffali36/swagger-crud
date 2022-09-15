@@ -35,4 +35,8 @@ public class EmployeeService {
     {
         return new  ResponseEntity(employeeRepo.updateRecord(employee,id),HttpStatus.OK);
     }
+    public ResponseEntity<Employee> getRecordById(int id)
+    {
+        return new ResponseEntity(employeeRepo.getRecordById(id),HttpStatus.OK);
+    }
 }
